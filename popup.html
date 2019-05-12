@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>我的瀏覽器會圖片辨識</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type="text/css">
+      body {
+        margin: 10px;
+        min-width: 400px;
+      }
+
+      h1 {
+        font-size: 15px;
+      }
+
+      #popup {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="popup.js"></script>
+  </head>
+  <body>
+    <h1>我的瀏覽器會圖片辨識</h1>
+    <div id="popup">
+      <span>選擇圖片上要轉換成文字的語言</span>
+      <select id="select">
+        <option selected disabled hidden value=''>請選擇</option>
+        <option value="eng">英文</option>
+        <option value="cht">中文</option>
+      </select>
+    </div>
+    <hr>
+    <div id="result"></div>
+  </body>
+</html>
