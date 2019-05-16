@@ -1,59 +1,57 @@
-$(document).ready(function(){
-  $("#select").change(function(){
-    const language = $("#select").val();
+document.addEventListener('DOMContentLoaded', () => {
 
-    chrome.tabs.getSelected(null,function(tab) {
+  const select = document.querySelector('#select');
+  const result = document.querySelector('#result');
+
+  select.addEventListener('change', (event) => {
+    const language = select.value;
+
+    chrome.tabs.getSelected((tab) => {
       const tablink = tab.url;
       const formData = new FormData();
-      formData.append("url", tablink);
-      formData.append("language", language);
-      formData.append("apikey", "your-api-key");
-      formData.append("isOverlayRequired", true);
+      formData.append('url', tablink);
+      formData.append('language', language);
+      formData.append('apikey', 'your-api-key');
 
-      $.ajax({
-        url: "https://api.ocr.space/parse/image",
-        data: formData,
-        dataType: 'json',
-        cache: false,
-        contentType: false,
-        processData: false,
-        type: 'POST',
-        success: function (ocrParsedResult) {
+      const url = 'https://api.ocr.space/parse/image';
+      fetch(url, {
+        method: 'POST',
+        body: formData
+      }).then((response) => {
+          return response.json();
+        }).then((jsonData) => {
+          const parsedResults = jsonData['ParsedResults'];
+          const errorMessage = jsonData['ErrorMessage'];
 
-          const parsedResults = ocrParsedResult["ParsedResults"];
-          const errorMessage = ocrParsedResult["ErrorMessage"];
+          if (parsedResults != null) {
+            parsedResults.forEach((value) => {
+              let exitCode = value['FileParseExitCode'];
+              let parsedText = value['ParsedText'];
+              let errorMessage = value['ErrorMessage'];
 
-          if (parsedResults!= null) {
-            $.each(parsedResults, function (index, value) {
-              let exitCode = value["FileParseExitCode"];
-              let parsedText = value["ParsedText"];
-              let errorMessage = value["ParsedTextFileName"];
-              let pageText = "";
-
-              if (parsedText === "") {
+              if (parsedText === '') {
                 exitCode = -1;
               }
 
               switch (+exitCode) {
                 case -1:
-                  pageText = "Error: parsed text is blank"
-                  $("#result").text(pageText);
+                  result.innerHTML = 'Error: parsed text is blank';
                   break;
                 case 1:
-                  pageText = parsedText;
-                  $("#result").text(pageText);
+                  result.innerHTML += parsedText;
                   break;
                 default:
-                  pageText = "Error: " + errorMessage;
-                  $("#result").text(pageText);
+                  result.innerHTML = 'Error: ' + errorMessage;
                   break;
               }
             });
           } else {
-            $("#result").text("Error: " + errorMessage);
+            result.innerHTML = 'Error: ' + errorMessage;
           }
-        }
-      });
+
+        }).catch((err) => {
+          console.log('Error:', err);
+      })
     });
   });
 });
