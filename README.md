@@ -3,4 +3,4 @@
 ### [Chrome Extension](chrome://extensions)
 ### [Free OCR API](https://ocr.space/ocrapi)
 
-![examlpe](example.jpg)
+![examlpe](ocr_chrome.gif)
